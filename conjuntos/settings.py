@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-wy^t2u$8qq(&bk8^%l2tq%q8pz#7_tn-yjs5mi77^ow_gnoq7c
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'http://conjuntos.ctrlcash.net',
-    'http://www.conjuntos.ctrlcash.net',
+    'conjuntos.ctrlcash.net',
+    'www.conjuntos.ctrlcash.net',
 ]
 
 CORS_ALLOWED_ORIGINS = [
