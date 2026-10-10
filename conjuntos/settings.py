@@ -32,7 +32,9 @@ CORS_ALLOWED_ORIGINS = [
     'http://142.93.254.184',
     'http://192.168.0.99:5173',
     'http://ctrlcash.net',
+    'http://conjuntos.ctrlcash.net',
     'http://www.ctrlcash.net',
+    'http://www.conjuntos.ctrlcash.net',
 ]
 # Application definition
 
