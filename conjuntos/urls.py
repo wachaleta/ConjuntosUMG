@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from backend.viewsets import *
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/conjuntos/union/', UnirConjuntos.as_view(), name="union"),
+    path('api/conjuntos/interseccion/', InterseccionViewSet.as_view(), name="interseccion"),
 ]
