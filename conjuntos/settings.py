@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-wy^t2u$8qq(&bk8^%l2tq%q8pz#7_tn-yjs5mi77^ow_gnoq7c
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    '127.0.0.1',
     'conjuntos.ctrlcash.net',
     'www.conjuntos.ctrlcash.net',
 ]

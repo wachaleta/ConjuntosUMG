@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/conjuntos/union/', UnirConjuntos.as_view(), name="union"),
     path('api/conjuntos/interseccion/', InterseccionViewSet.as_view(), name="interseccion"),
+    path('api/conjuntos/diferencia/', DiferenciaViewSet.as_view(), name="diferencia"),
 ]

@@ -2,20 +2,29 @@
 <template>
     <div class="container-fluid conjuntos-page py-4 px-3 px-lg-4">
         <!-- Encabezado -->
-        <header class="page-header mb-4">
+        
+        <header class="page-header mb-4 d-flex justify-content-between align-items-center gap-3">
             <div class="d-flex align-items-center gap-3">
                 <div class="header-icon">
-                    <FontAwesomeIcon icon="shapes"/>
+                    <FontAwesomeIcon icon="shapes" />
                 </div>
 
                 <div>
                     <h1 class="page-title mb-1">Operaciones de conjuntos</h1>
                     <p class="page-subtitle mb-0">
-                        Crea conjuntos, agrega elementos y realiza operaciones matemáticas.
+                        Crea conjuntos, administra sus elementos y realiza operaciones matemáticas.
                     </p>
                 </div>
             </div>
+
+            <div class="ms-auto flex-shrink-0">
+                <RouterLink :to="{name: 'sobre-nosotros'}" class="btn btn-success">
+                    <FontAwesomeIcon icon="people-group" />
+                    Sobre Nosotros
+                </RouterLink>
+            </div>
         </header>
+
 
         <!-- Resumen -->
         <div class="row g-3 mb-4">
@@ -35,7 +44,7 @@
             <div class="col-12 col-sm-6 col-lg-4">
                 <div class="summary-card">
                     <div class="summary-icon blue">
-                        <FontAwesomeIcon icon="list-ol"/>
+                        <FontAwesomeIcon icon="list-ol" />
                     </div>
 
                     <div>
@@ -48,7 +57,7 @@
             <div class="col-12 col-lg-4">
                 <div class="summary-card">
                     <div class="summary-icon green">
-                        <FontAwesomeIcon icon="calculator"/>
+                        <FontAwesomeIcon icon="calculator" />
                     </div>
 
                     <div>
@@ -61,7 +70,7 @@
             </div>
         </div>
 
-        <!-- Sección de conjuntos -->
+        <!-- Mis conjuntos -->
         <section class="content-card mb-4">
             <div class="section-header">
                 <div>
@@ -72,7 +81,7 @@
                 </div>
 
                 <Boton @click="crearConjunto()">
-                    <FontAwesomeIcon icon="plus"/>
+                    <FontAwesomeIcon icon="plus" />
                     Agregar conjunto
                 </Boton>
             </div>
@@ -84,6 +93,7 @@
                     class="col-12 col-md-6 col-xl-4"
                 >
                     <article class="set-card">
+                        <!-- Encabezado del conjunto -->
                         <div class="set-card-header">
                             <div class="set-heading">
                                 <div class="set-letter">
@@ -91,7 +101,10 @@
                                 </div>
 
                                 <div>
-                                    <h3 class="set-title">Conjunto {{ item }}</h3>
+                                    <h3 class="set-title">
+                                        Conjunto {{ String.fromCharCode(65 + index) }}
+                                    </h3>
+
                                     <span class="set-count">
                                         {{
                                             elementos.filter(
@@ -103,34 +116,54 @@
                                 </div>
                             </div>
 
-                            <span class="set-symbol">
-                                {{ String.fromCharCode(65 + index) }}
-                            </span>
+                            <div class="set-header-actions">
+                                <span class="set-symbol">
+                                    {{ String.fromCharCode(65 + index) }}
+                                </span>
+
+                                <button
+                                    type="button"
+                                    class="delete-button"
+                                    title="Eliminar conjunto"
+                                    aria-label="Eliminar conjunto"
+                                    @click="eliminarConjunto(item)"
+                                >
+                                    <FontAwesomeIcon icon="trash-can" />
+                                </button>
+                            </div>
                         </div>
 
+                        <!-- Agregar elemento -->
                         <form
                             class="add-element-form"
                             @submit.prevent="agregarElemento(item)"
                         >
-                            <label class="form-label">
+                            <label
+                                class="form-label"
+                                :for="`elemento-${item}`"
+                            >
                                 Nuevo elemento
                             </label>
 
                             <div class="input-action">
                                 <TextInput
                                     v-model="nuevo_elemento"
+                                    :id="`elemento-${item}`"
                                 >
                                     Escribe un elemento
                                 </TextInput>
 
-                                <Boton color="success">
-                                    <FontAwesomeIcon icon="plus"/>
+                                <Boton color="success" type="submit">
+                                    <FontAwesomeIcon icon="plus" />
                                 </Boton>
                             </div>
                         </form>
 
+                        <!-- Elementos del conjunto -->
                         <div class="elements-container">
-                            <span class="elements-label">Elementos del conjunto</span>
+                            <span class="elements-label">
+                                Elementos del conjunto
+                            </span>
 
                             <div
                                 v-if="elementos.some(e => e.conjunto === item)"
@@ -143,12 +176,24 @@
                                     :key="i"
                                     class="element-chip"
                                 >
-                                    {{ elemento.valor }}
+                                    <span class="element-value">
+                                        {{ elemento.valor }}
+                                    </span>
+
+                                    <button
+                                        type="button"
+                                        class="delete-element-button"
+                                        title="Eliminar elemento"
+                                        aria-label="Eliminar elemento"
+                                        @click="eliminarElemento(elemento)"
+                                    >
+                                        <FontAwesomeIcon icon="xmark" />
+                                    </button>
                                 </span>
                             </div>
 
                             <div v-else class="empty-elements">
-                                <FontAwesomeIcon icon="inbox"/>
+                                <FontAwesomeIcon icon="inbox" />
                                 <span>Aún no hay elementos</span>
                             </div>
                         </div>
@@ -156,28 +201,77 @@
                 </div>
             </div>
 
+            <!-- Estado vacío -->
             <div v-else class="empty-state">
                 <div class="empty-state-icon">
-                    <FontAwesomeIcon icon="layer-group"/>
+                    <FontAwesomeIcon icon="layer-group" />
                 </div>
 
                 <h3>Comienza creando un conjunto</h3>
+
                 <p>
                     Agrega tu primer conjunto para empezar a trabajar con sus elementos.
                 </p>
 
                 <Boton @click="crearConjunto()">
-                    <FontAwesomeIcon icon="plus"/>
+                    <FontAwesomeIcon icon="plus" />
                     Crear mi primer conjunto
                 </Boton>
             </div>
         </section>
 
-        <!-- Panel de operaciones -->
+        <!-- Conjunto universal -->
+        <section class="content-card mb-4 universal-card">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <FontAwesomeIcon
+                            icon="globe"
+                            class="universal-title-icon"
+                        />
+                        Conjunto universal (U)
+                    </h2>
+
+                    <p class="section-description">
+                        Todos los elementos de tus conjuntos, sin repeticiones.
+                    </p>
+                </div>
+
+                <span class="universal-count">
+                    {{ conjuntoUniversal.length }}
+                    elementos únicos
+                </span>
+            </div>
+
+            <div
+                v-if="conjuntoUniversal.length"
+                class="universal-elements"
+            >
+                <span
+                    v-for="(elemento, index) in conjuntoUniversal"
+                    :key="index"
+                    class="universal-chip"
+                >
+                    {{ elemento }}
+                </span>
+            </div>
+
+            <div v-else class="universal-empty">
+                <FontAwesomeIcon icon="globe" />
+
+                <span>
+                    El conjunto universal está vacío. Agrega elementos a tus
+                    conjuntos para que aparezcan aquí.
+                </span>
+            </div>
+        </section>
+
+        <!-- Configurar operación -->
         <section class="content-card mb-4">
             <div class="section-header">
                 <div>
                     <h2 class="section-title">Configurar operación</h2>
+
                     <p class="section-description">
                         Selecciona una operación y define los conjuntos que utilizarás.
                     </p>
@@ -200,12 +294,15 @@
                         class="form-select custom-select"
                     >
                         <option value="Unión">Unión (A ∪ B)</option>
+
                         <option value="Intersección">
                             Intersección (A ∩ B)
                         </option>
+
                         <option value="Diferencia">
                             Diferencia (A − B)
                         </option>
+
                         <option value="Complemento">
                             Complemento (Aᶜ)
                         </option>
@@ -232,7 +329,7 @@
                             :key="conjunto"
                             :value="conjunto"
                         >
-                            Conjunto {{ conjunto }}
+                            Conjunto {{ String.fromCharCode(65 + conjuntos.indexOf(conjunto)) }}
                         </option>
                     </select>
                 </div>
@@ -260,7 +357,7 @@
                             :key="conjunto"
                             :value="conjunto"
                         >
-                            Conjunto {{ conjunto }}
+                            Conjunto {{ String.fromCharCode(65 + conjuntos.indexOf(conjunto)) }}
                         </option>
                     </select>
 
@@ -268,24 +365,27 @@
                         v-if="operacion === 'Complemento'"
                         class="field-hint"
                     >
-                        El complemento se calcula respecto de un conjunto universal.
-                        Verifica que tu composable tenga definida esa referencia.
+                        Se calculará la diferencia entre el conjunto universal
+                        U y el primer conjunto seleccionado.
                     </small>
                 </div>
             </div>
 
+            <!-- Vista previa -->
             <div class="operation-preview mt-4">
                 <div class="preview-icon">
-                    <FontAwesomeIcon icon="code-branch"/>
+                    <FontAwesomeIcon icon="code-branch" />
                 </div>
 
                 <div class="preview-content">
-                    <span class="preview-label">Operación a realizar</span>
+                    <span class="preview-label">
+                        Operación a realizar
+                    </span>
 
                     <div class="preview-expression">
                         <template v-if="primer_conjunto">
                             <span class="math-set">
-                                {{ primer_conjunto }}
+                                {{ String.fromCharCode(65 + conjuntos.indexOf(primer_conjunto)) }}
                             </span>
 
                             <span class="math-operator">
@@ -299,11 +399,15 @@
                                 }}
                             </span>
 
+                            <template v-if="operacion === 'Complemento'">
+                                <span class="math-set">U</span>
+                            </template>
+
                             <span
-                                v-if="operacion !== 'Complemento'"
+                                v-else
                                 class="math-set"
                             >
-                                {{ segundo_conjunto || '?' }}
+                                {{ segundo_conjunto == '' ? '?' : String.fromCharCode(65 + conjuntos.indexOf(segundo_conjunto)) }}
                             </span>
                         </template>
 
@@ -314,10 +418,8 @@
                 </div>
 
                 <div class="preview-action">
-                    <Boton
-                        @click="submit()"
-                    >
-                        <FontAwesomeIcon icon="fa-play"/>
+                    <Boton @click="submit()">
+                        <FontAwesomeIcon icon="play" />
                         Calcular resultado
                     </Boton>
                 </div>
@@ -328,11 +430,14 @@
         <section class="result-card">
             <div class="result-header">
                 <div class="result-icon">
-                    <FontAwesomeIcon icon="square-root-variable"/>
+                    <FontAwesomeIcon icon="square-root-variable" />
                 </div>
 
                 <div>
-                    <h2 class="result-title">Resultado de la operación</h2>
+                    <h2 class="result-title">
+                        Resultado de la operación
+                    </h2>
+
                     <p class="result-description">
                         Aquí se mostrará el resultado del cálculo.
                     </p>
@@ -340,7 +445,9 @@
             </div>
 
             <div class="result-body">
-                <div class="result-set-label">Conjunto resultante</div>
+                <div class="result-set-label">
+                    Conjunto resultante
+                </div>
 
                 <div class="result-values">
                     <template v-if="resultado_union != null">
@@ -377,7 +484,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 import { useConjuntosComposable } from '@/composables/useConjuntosComposable';
 
@@ -399,18 +506,77 @@ const {
     unirConjuntos,
     interseccionConjuntos,
     diferenciaConjuntos,
-    complementoConjuntos,
 } = useConjuntosComposable();
 
-const crearConjunto = () => {
-    for (const nombre of nombres_conjuntos.value) {
-        if (!conjuntos.value.includes(nombre)) {
-            conjuntos.value.push(nombre);
-            return;
+/*
+ * Conjunto universal.
+ * Reúne los elementos de todos los conjuntos sin repetir valores.
+ * La comparación ignora espacios externos y diferencias entre mayúsculas
+ * y minúsculas, conservando la primera versión del elemento registrado.
+ */
+const conjuntoUniversal = computed(() => {
+    const valoresUnicos = new Map();
+
+    for (const elemento of elementos.value) {
+        const valorOriginal = String(elemento.valor).trim();
+        const clave = valorOriginal.toLocaleLowerCase();
+
+        if (valorOriginal && !valoresUnicos.has(clave)) {
+            valoresUnicos.set(clave, valorOriginal);
         }
     }
+
+    return [...valoresUnicos.values()];
+});
+
+/*
+ * Crear un conjunto con el primer nombre disponible.
+ */
+const crearConjunto = () => {
+    const nombreDisponible = nombres_conjuntos.value.find(
+        nombre => !conjuntos.value.includes(nombre)
+    );
+
+    if (nombreDisponible === undefined) {
+        window.alert('No hay más nombres de conjuntos disponibles.');
+        return;
+    }
+
+    conjuntos.value.push(nombreDisponible);
 };
 
+/*
+ * Eliminar un conjunto y todos sus elementos.
+ */
+const eliminarConjunto = (conjunto) => {
+    const confirmar = window.confirm(
+        `¿Deseas eliminar el conjunto ${conjunto} y todos sus elementos?`
+    );
+
+    if (!confirmar) return;
+
+    conjuntos.value = conjuntos.value.filter(
+        nombre => nombre !== conjunto
+    );
+
+    elementos.value = elementos.value.filter(
+        elemento => elemento.conjunto !== conjunto
+    );
+
+    if (primer_conjunto.value === conjunto) {
+        primer_conjunto.value = '';
+    }
+
+    if (segundo_conjunto.value === conjunto) {
+        segundo_conjunto.value = '';
+    }
+
+    resultado_union.value = null;
+};
+
+/*
+ * Agregar un elemento a un conjunto.
+ */
 const agregarElemento = (conjunto) => {
     const valor = nuevo_elemento.value.trim();
 
@@ -422,15 +588,54 @@ const agregarElemento = (conjunto) => {
     });
 
     nuevo_elemento.value = '';
+    resultado_union.value = null;
 };
 
+/*
+ * Eliminar un elemento específico sin afectar los demás.
+ */
+const eliminarElemento = (elemento) => {
+    elementos.value = elementos.value.filter(
+        actual => actual !== elemento
+    );
+
+    resultado_union.value = null;
+};
+
+/*
+ * Limpiar resultados antiguos cuando cambien los conjuntos
+ * o los elementos.
+ */
+watch(
+    [conjuntos, elementos],
+    () => {
+        resultado_union.value = null;
+    },
+    { deep: true }
+);
+
+/*
+ * Ejecutar la operación seleccionada.
+ */
 const submit = () => {
-    if (!operacion.value || !primer_conjunto.value) return;
+    if (!primer_conjunto.value) {
+        window.alert('Selecciona el primer conjunto.');
+        return;
+    }
+
+    if (!conjuntos.value.includes(primer_conjunto.value)) {
+        window.alert('El primer conjunto seleccionado ya no existe.');
+        return;
+    }
 
     if (
         operacion.value !== 'Complemento' &&
-        !segundo_conjunto.value
+        (
+            !segundo_conjunto.value ||
+            !conjuntos.value.includes(segundo_conjunto.value)
+        )
     ) {
+        window.alert('Selecciona un segundo conjunto válido.');
         return;
     }
 
@@ -447,537 +652,35 @@ const submit = () => {
             diferenciaConjuntos();
             break;
 
-        case 'Complemento':
-            complementoConjuntos();
+        case 'Complemento': {
+            /*
+             * Aᶜ = U - A
+             * El complemento se calcula directamente usando el conjunto
+             * universal reactivo y los elementos del primer conjunto.
+             */
+            const elementosPrimerConjunto = new Set(
+                elementos.value
+                    .filter(
+                        elemento =>
+                            elemento.conjunto === primer_conjunto.value
+                    )
+                    .map(
+                        elemento =>
+                            String(elemento.valor)
+                                .trim()
+                                .toLocaleLowerCase()
+                    )
+            );
+
+            resultado_union.value = conjuntoUniversal.value.filter(
+                valor =>
+                    !elementosPrimerConjunto.has(
+                        String(valor).trim().toLocaleLowerCase()
+                    )
+            );
+
             break;
+        }
     }
 };
 </script>
-
-<style scoped>
-.conjuntos-page {
-    --primary: #6c63ff;
-    --primary-light: #f0efff;
-    --text-main: #202438;
-    --text-muted: #81879b;
-    --border-color: #e9ebf2;
-    --surface: #ffffff;
-
-    min-height: 100%;
-    background: #f6f7fb;
-    color: var(--text-main);
-    border-radius: 16px;
-}
-
-.page-header {
-    padding: 8px 2px 12px;
-}
-
-.header-icon {
-    width: 54px;
-    height: 54px;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    border-radius: 16px;
-    color: white;
-    font-size: 23px;
-    background: linear-gradient(135deg, #786cff, #5748dc);
-    box-shadow: 0 8px 20px rgba(108, 99, 255, 0.2);
-}
-
-.page-title {
-    font-size: clamp(1.35rem, 2.5vw, 1.8rem);
-    font-weight: 750;
-    letter-spacing: -0.7px;
-}
-
-.page-subtitle,
-.section-description {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    line-height: 1.6;
-}
-
-.summary-card {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 20px;
-    background: var(--surface);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.summary-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(32, 36, 56, 0.05);
-}
-
-.summary-icon {
-    width: 48px;
-    height: 48px;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    border-radius: 14px;
-    font-size: 19px;
-}
-
-.summary-icon.purple {
-    background: #efedff;
-    color: #7163ed;
-}
-
-.summary-icon.blue {
-    background: #e8f3ff;
-    color: #3984dd;
-}
-
-.summary-icon.green {
-    background: #e3f8ef;
-    color: #23996c;
-}
-
-.summary-label {
-    display: block;
-    margin-bottom: 5px;
-    color: var(--text-muted);
-    font-size: 0.8rem;
-}
-
-.summary-value {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 750;
-}
-
-.operation-summary {
-    font-size: 1.15rem;
-}
-
-.content-card {
-    padding: 25px;
-    background: var(--surface);
-    border: 1px solid var(--border-color);
-    border-radius: 18px;
-    box-shadow: 0 3px 12px rgba(32, 36, 56, 0.025);
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
-.section-title {
-    margin: 0 0 5px;
-    font-size: 1.15rem;
-    font-weight: 750;
-}
-
-.section-description {
-    margin: 0;
-}
-
-.set-card {
-    height: 100%;
-    padding: 20px;
-    overflow: hidden;
-    background: #fff;
-    border: 1px solid var(--border-color);
-    border-radius: 15px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.set-card:hover {
-    border-color: #d5d0ff;
-    box-shadow: 0 8px 22px rgba(108, 99, 255, 0.07);
-}
-
-.set-card-header,
-.set-heading {
-    display: flex;
-    align-items: center;
-}
-
-.set-card-header {
-    justify-content: space-between;
-    padding-bottom: 18px;
-    border-bottom: 1px solid #f0f1f6;
-}
-
-.set-heading {
-    gap: 12px;
-}
-
-.set-letter {
-    width: 43px;
-    height: 43px;
-    display: grid;
-    place-items: center;
-    border-radius: 13px;
-    background: var(--primary-light);
-    color: var(--primary);
-    font-weight: 800;
-    font-size: 1.15rem;
-}
-
-.set-title {
-    margin: 0 0 4px;
-    font-size: 1rem;
-    font-weight: 750;
-}
-
-.set-count {
-    color: var(--text-muted);
-    font-size: 0.78rem;
-}
-
-.set-symbol {
-    color: #e6e4ff;
-    font-size: 2.5rem;
-    font-weight: 800;
-    line-height: 1;
-}
-
-.add-element-form {
-    padding: 18px 0;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 8px;
-    color: #454b60;
-    font-size: 0.86rem;
-    font-weight: 650;
-}
-
-.input-action {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.input-action > :first-child {
-    flex: 1;
-    min-width: 0;
-}
-
-.elements-container {
-    padding-top: 16px;
-    border-top: 1px solid #f0f1f6;
-}
-
-.elements-label {
-    display: block;
-    margin-bottom: 12px;
-    color: var(--text-muted);
-    font-size: 0.78rem;
-    font-weight: 600;
-}
-
-.elements-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.element-chip,
-.result-chip {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 7px 12px;
-    border: 1px solid #e4e1ff;
-    border-radius: 9px;
-    background: #f4f2ff;
-    color: #6155d8;
-    font-size: 0.85rem;
-    font-weight: 600;
-    overflow-wrap: anywhere;
-    max-width: 100%;
-}
-
-.empty-elements {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 13px;
-    border-radius: 10px;
-    background: #f8f9fc;
-    color: #969bad;
-    font-size: 0.83rem;
-}
-
-.empty-state {
-    padding: 40px 15px;
-    text-align: center;
-}
-
-.empty-state-icon {
-    width: 66px;
-    height: 66px;
-    display: grid;
-    place-items: center;
-    margin: 0 auto 18px;
-    border-radius: 20px;
-    background: var(--primary-light);
-    color: var(--primary);
-    font-size: 27px;
-}
-
-.empty-state h3 {
-    font-size: 1.05rem;
-    font-weight: 750;
-}
-
-.empty-state p {
-    max-width: 420px;
-    margin: 0 auto 20px;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-}
-
-.operation-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 9px 13px;
-    border-radius: 10px;
-    background: #f0efff;
-    color: #6558d9;
-    font-size: 0.8rem;
-    font-weight: 650;
-    white-space: nowrap;
-}
-
-.custom-select {
-    min-height: 47px;
-    padding: 11px 14px;
-    border: 1px solid #e0e3ed;
-    border-radius: 10px;
-    background-color: #fff;
-    color: var(--text-main);
-    font-size: 0.9rem;
-    box-shadow: none;
-}
-
-.custom-select:focus {
-    border-color: #958cff;
-    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
-}
-
-.custom-select:disabled {
-    background-color: #f5f6fa;
-    color: #999eb0;
-}
-
-.field-hint {
-    display: block;
-    margin-top: 9px;
-    color: var(--text-muted);
-    font-size: 0.78rem;
-    line-height: 1.5;
-}
-
-.operation-preview {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 20px;
-    border: 1px solid #e4e1ff;
-    border-radius: 14px;
-    background: linear-gradient(110deg, #f7f6ff, #fbfaff);
-}
-
-.preview-icon {
-    width: 45px;
-    height: 45px;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    border-radius: 12px;
-    background: #e9e6ff;
-    color: #6c63ff;
-    font-size: 19px;
-}
-
-.preview-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.preview-label,
-.result-set-label {
-    display: block;
-    margin-bottom: 7px;
-    color: var(--text-muted);
-    font-size: 0.78rem;
-}
-
-.preview-expression {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.math-set {
-    font-size: 1.1rem;
-    font-weight: 750;
-}
-
-.math-operator {
-    color: #7064e8;
-    font-size: 1.4rem;
-    font-weight: 750;
-}
-
-.preview-placeholder {
-    color: #989db0;
-    font-size: 0.9rem;
-}
-
-.preview-action {
-    flex-shrink: 0;
-}
-
-.result-card {
-    overflow: hidden;
-    border: 1px solid #dfe9e4;
-    border-radius: 18px;
-    background: #fff;
-    box-shadow: 0 4px 16px rgba(32, 36, 56, 0.025);
-}
-
-.result-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 22px 25px;
-    border-bottom: 1px solid #edf1ee;
-    background: #f9fcfa;
-}
-
-.result-icon {
-    width: 46px;
-    height: 46px;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    border-radius: 13px;
-    background: #e1f6e9;
-    color: #238b59;
-    font-size: 21px;
-}
-
-.result-title {
-    margin: 0 0 5px;
-    font-size: 1.1rem;
-    font-weight: 750;
-}
-
-.result-description {
-    margin: 0;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
-
-.result-body {
-    padding: 24px 25px;
-}
-
-.result-values {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-    min-height: 35px;
-}
-
-.result-chip {
-    padding: 9px 15px;
-    border-color: #ccebd9;
-    background: #eaf8ef;
-    color: #24784b;
-}
-
-.result-placeholder,
-.result-empty {
-    color: #9298aa;
-    font-size: 0.9rem;
-}
-
-@media (max-width: 767px) {
-    .conjuntos-page {
-        padding-right: 12px !important;
-        padding-left: 12px !important;
-    }
-
-    .content-card {
-        padding: 18px;
-        border-radius: 15px;
-    }
-
-    .section-header {
-        align-items: flex-start;
-    }
-
-    .section-header > :last-child {
-        flex-shrink: 0;
-    }
-
-    .operation-badge {
-        display: none;
-    }
-
-    .operation-preview {
-        align-items: flex-start;
-        flex-wrap: wrap;
-        padding: 16px;
-    }
-
-    .preview-content {
-        padding-top: 4px;
-    }
-
-    .preview-action {
-        width: 100%;
-    }
-
-    .preview-action :deep(button) {
-        width: 100%;
-    }
-
-    .result-header,
-    .result-body {
-        padding: 18px;
-    }
-}
-
-@media (max-width: 420px) {
-    .page-header .header-icon {
-        width: 45px;
-        height: 45px;
-        border-radius: 13px;
-    }
-
-    .page-subtitle {
-        font-size: 0.82rem;
-    }
-
-    .section-header {
-        flex-wrap: wrap;
-    }
-
-    .input-action {
-        align-items: stretch;
-    }
-}
-</style>
-```

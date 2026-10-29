@@ -52,7 +52,6 @@ export const useConjuntosStore = defineStore("conjuntos", {
             })
             .then(res => {
                 this.resultado_union = res.data.resultado
-                toast.success("Resultado calculado")
             })
         },
         
@@ -67,7 +66,6 @@ export const useConjuntosStore = defineStore("conjuntos", {
             })
             .then(res => {
                 this.resultado_union = res.data.resultado
-                toast.success("Resultado calculado")
             })
         },
 
@@ -76,13 +74,12 @@ export const useConjuntosStore = defineStore("conjuntos", {
             const elementos_primer_conjunto = this.elementos.filter(v => v.conjunto == this.primer_conjunto).map(item => item.valor)
             const elementos_segundo_conjunto = this.elementos.filter(v => v.conjunto == this.segundo_conjunto).map(item => item.valor)
 
-            await Api().post("conjuntos/union/", {
+            await Api().post("conjuntos/diferencia/", {
                 primerConjunto: elementos_primer_conjunto,
                 segundoConjunto: elementos_segundo_conjunto,
             })
             .then(res => {
                 this.resultado_union = res.data.resultado
-                toast.success("Resultado calculado")
             })
         },
 
@@ -97,7 +94,6 @@ export const useConjuntosStore = defineStore("conjuntos", {
             })
             .then(res => {
                 this.resultado_union = res.data.resultado
-                toast.success("Resultado calculado")
             })
         },
     }

@@ -10,9 +10,6 @@ class InterseccionViewSet(APIView):
         serializer = UnionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        print("serializer.data")
-        print(serializer.data)
-
         res = []
 
         for item in serializer.data['primerConjunto']:
