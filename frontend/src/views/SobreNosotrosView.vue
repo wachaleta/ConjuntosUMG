@@ -3,10 +3,10 @@
 
         <!-- Encabezado -->
         <header
-            class="page-header mb-4 d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3"
+            class="page-header mb-4 d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-3"
         >
             <div class="d-flex align-items-center gap-3">
-                <div class="header-icon">
+                <div class="header-icon flex-shrink-0">
                     <FontAwesomeIcon icon="people-group" />
                 </div>
 
@@ -21,17 +21,19 @@
                 </div>
             </div>
 
-            <RouterLink
-                :to="{ name: 'home' }"
-                class="btn btn-success btn-regresar"
-            >
-                <FontAwesomeIcon icon="shapes" />
-                <span>Operaciones de conjuntos</span>
-                <FontAwesomeIcon
-                    icon="arrow-right"
-                    class="icono-flecha"
-                />
-            </RouterLink>
+            <div class="ms-md-auto flex-shrink-0">
+                <RouterLink
+                    :to="{ name: 'home' }"
+                    class="btn btn-success btn-regresar w-100 w-md-auto"
+                >
+                    <FontAwesomeIcon icon="shapes" class="me-2" />
+                    <span>Operaciones de conjuntos</span>
+                    <FontAwesomeIcon
+                        icon="arrow-right"
+                        class="icono-flecha ms-2"
+                    />
+                </RouterLink>
+            </div>
         </header>
 
         <!-- Introducción -->
@@ -152,6 +154,10 @@ import { computed } from 'vue';
 
 import fabricio from '@/assets/images/Fabricio.jpeg';
 import andrea from '@/assets/images/Andrea.jpeg';
+import Ferdy from '@/assets/images/Ferdy.jpeg';
+import Jacky from '@/assets/images/Jacky.jpeg';
+import Kristhell from '@/assets/images/Kristhell.jpeg';
+import Keylin from '@/assets/images/Keylin.jpeg';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -162,9 +168,29 @@ const integrantes = computed(() => [
         foto: fabricio,
     },
     {
+        nombre: 'Ferdy Guillermo Rodríguez Vásquez',
+        carne: '1390-26-167',
+        foto: Ferdy,
+    },
+    {
         nombre: 'Andrea Elisa Cardona Martínez',
         carne: '1390-26-4171',
         foto: andrea,
+    },
+    {
+        nombre: 'Jackelin Anaí Campos Osorio',
+        carne: '1390-26-4174',
+        foto: Jacky,
+    },
+    {
+        nombre: 'Kristhell Dayana León Ramírez',
+        carne: '1390-26-817',
+        foto: Kristhell,
+    },
+    {
+        nombre: 'Keylin Mariela Juárez Flores',
+        carne: '1390-26-4897',
+        foto: Keylin,
     },
 ]);
 </script>

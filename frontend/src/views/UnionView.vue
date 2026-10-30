@@ -3,9 +3,11 @@
     <div class="container-fluid conjuntos-page py-4 px-3 px-lg-4">
         <!-- Encabezado -->
         
-        <header class="page-header mb-4 d-flex justify-content-between align-items-center gap-3">
+        <header
+            class="page-header mb-4 d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-3"
+        >
             <div class="d-flex align-items-center gap-3">
-                <div class="header-icon">
+                <div class="header-icon flex-shrink-0">
                     <FontAwesomeIcon icon="shapes" />
                 </div>
 
@@ -17,9 +19,12 @@
                 </div>
             </div>
 
-            <div class="ms-auto flex-shrink-0">
-                <RouterLink :to="{name: 'sobre-nosotros'}" class="btn btn-success">
-                    <FontAwesomeIcon icon="people-group" />
+            <div class="ms-md-auto flex-shrink-0">
+                <RouterLink
+                    :to="{ name: 'sobre-nosotros' }"
+                    class="btn btn-success w-100 w-md-auto"
+                >
+                    <FontAwesomeIcon icon="people-group" class="me-2" />
                     Sobre Nosotros
                 </RouterLink>
             </div>
